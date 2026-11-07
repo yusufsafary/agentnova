@@ -1,5 +1,6 @@
 (function () {
   var N = window.NOVA, R = window.NovaRead;
+  var L = function (k, v) { return window.NovaLang ? window.NovaLang.t(k, v) : k; };
   var $ = function (id) { return document.getElementById(id); };
   var fmt = function (n) { return Number(n).toLocaleString("en-US"); };
 
@@ -23,19 +24,19 @@
     var cd = $("cd"), label = $("cd-label"), strip = $("strip-text");
     if (now < N.openTime) {
       phase = "pre";
-      if (label) label.textContent = "MINT OPENS IN";
+      if (label) label.textContent = L("cd.opens");
       if (cd) cd.textContent = cdText(N.openTime);
-      if (strip) strip.textContent = "OPENS " + utcText(N.openTime) + " · REVEAL " + utcText(N.revealTime);
+      if (strip) strip.textContent = L("strip.opens") + " " + utcText(N.openTime) + " · " + L("strip.reveal") + " " + utcText(N.revealTime);
     } else if (now < N.revealTime) {
       phase = "live";
-      if (label) label.textContent = "REVEAL IN";
+      if (label) label.textContent = L("cd.reveal");
       if (cd) cd.textContent = cdText(N.revealTime);
-      if (strip) strip.textContent = "MINT LIVE · REVEAL " + utcText(N.revealTime);
+      if (strip) strip.textContent = L("strip.live") + " · " + L("strip.reveal") + " " + utcText(N.revealTime);
     } else {
       phase = "revealed";
-      if (label) label.textContent = "REVEALED";
+      if (label) label.textContent = L("cd.revealed");
       if (cd) cd.textContent = "LIVE";
-      if (strip) strip.textContent = "MINT LIVE · REVEALED " + utcText(N.revealTime);
+      if (strip) strip.textContent = L("strip.live") + " · " + L("strip.revealed") + " " + utcText(N.revealTime);
     }
   }
   tickClock();
@@ -47,7 +48,7 @@
       var el = $("b-minted"); if (el) el.textContent = fmt(minted);
       var left = $("b-left"); if (left) left.textContent = fmt(N.maxSupply - minted);
       var bar = $("supply-bar"); if (bar) bar.style.width = (minted / N.maxSupply * 100).toFixed(2) + "%";
-      var mm = $("m-minted"); if (mm) mm.textContent = fmt(minted);
+      lastMinted = minted; renderP2();
     }).catch(function () {});
     R.call(N.market, N.sel.listedIds).then(function (hex) {
       var w = R.words(hex);
@@ -57,14 +58,20 @@
   }
   refreshBoard();
   setInterval(refreshBoard, 30000);
+  var lastMinted = 0;
+  function renderP2() {
+    var el = $("mkt-p2"); if (!el) return;
+    el.innerHTML = L("mkt.p2", { n: '<b id="m-minted">' + fmt(lastMinted) + "</b>" });
+  }
+  document.addEventListener("nova:lang", function () { tickClock(); renderP2(); });
 
   // Wallet checker: shows the wallet's own question and status. Read-only.
   var btn = $("check-btn");
   if (btn) btn.addEventListener("click", function () {
     var addr = ($("check-addr").value || "").trim();
     var out = $("check-out");
-    if (!/^0x[0-9a-fA-F]{40}$/.test(addr)) { out.textContent = "Paste a valid BSC wallet address first."; return; }
-    out.textContent = "Reading chain…";
+    if (!/^0x[0-9a-fA-F]{40}$/.test(addr)) { out.textContent = L("check.invalid"); return; }
+    out.textContent = L("check.reading");
     var q = R.call(N.nft, N.sel.questionFor + R.padAddr(addr));
     var st = R.call(N.nft, N.sel.stats + R.padAddr(addr));
     Promise.all([q, st]).then(function (res) {
@@ -76,13 +83,13 @@
       R.call(N.nft, N.sel.freeUsed + R.padAddr(addr)).then(function (fu) {
         var used = R.words(fu)[0] === 1n;
         var lines = [];
-        lines.push("Agent ID: " + (hasId ? "held" : "not held"));
-        lines.push("Your free mint: " + (!hasId ? "needs an Agent ID" : used ? "already used" : "available"));
-        if (hasId && !used) lines.push("Your question: " + a + " " + sym + " " + b + " = ?  (your agent answers it inside the mint)");
-        lines.push("Minted by this wallet: " + (hasMinted ? "yes" : "not yet") + " · paid mints stay open to every wallet");
+        lines.push(L("check.agentid") + " " + (hasId ? L("check.held") : L("check.notheld")));
+        lines.push(L("check.free") + " " + (!hasId ? L("check.needid") : used ? L("check.used") : L("check.avail")));
+        if (hasId && !used) lines.push(L("check.question") + " " + a + " " + sym + " " + b + " = ?  " + L("check.qnote"));
+        lines.push(L("check.minted") + " " + (hasMinted ? L("check.yes") : L("check.notyet")) + L("check.tail"));
         out.textContent = lines.join("\n");
-      }).catch(function () { out.textContent = "Read failed. Try again."; });
-    }).catch(function () { out.textContent = "Read failed. Try again."; });
+      }).catch(function () { out.textContent = L("check.fail"); });
+    }).catch(function () { out.textContent = L("check.fail"); });
   });
 
   // Copy agent prompt
@@ -90,7 +97,7 @@
   if (cp) cp.addEventListener("click", function () {
     var txt = $("agent-prompt").textContent;
     if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () {
-      cp.textContent = "Copied"; setTimeout(function () { cp.textContent = "Copy prompt"; }, 1600);
+      cp.textContent = L("prompt.copied"); setTimeout(function () { cp.textContent = L("prompt.copy"); }, 1600);
     });
   });
 })();

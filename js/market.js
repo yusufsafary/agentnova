@@ -1,5 +1,6 @@
 (function () {
   var N = window.NOVA, R = window.NovaRead;
+  var L = function (k, v) { return window.NovaLang ? window.NovaLang.t(k, v) : k; };
   var $ = function (id) { return document.getElementById(id); };
   var NFT_ABI = [
     "function ownerOf(uint256) view returns (address)",
@@ -56,8 +57,8 @@
             '<div class="mc-body"><div class="mc-id">Nova #' + id + '</div>' +
             '<div class="mc-price">' + fmtBnb(price) + '</div>' +
             (mine
-              ? '<button class="mkt-btn ghost" data-act="delist" data-id="' + id + '">Delist</button>'
-              : '<button class="mkt-btn" data-act="buy" data-id="' + id + '" data-price="' + price.toString() + '">Buy for ' + fmtBnb(price) + '</button>') +
+              ? '<button class="mkt-btn ghost" data-act="delist" data-id="' + id + '">' + L("st.delist") + '</button>'
+              : '<button class="mkt-btn" data-act="buy" data-id="' + id + '" data-price="' + price.toString() + '">' + L("st.buyfor", { p: fmtBnb(price) }) + '</button>') +
             '</div>';
           grid.appendChild(card);
         }).catch(function () {}).finally(function () { pending--; });
@@ -69,11 +70,11 @@
         if (b.getAttribute("data-act") === "buy") doBuy(id, BigInt(b.getAttribute("data-price")), b);
         else doDelist(id, b);
       };
-    }).catch(function () { status("Could not read listings. Refresh in a moment.", true); });
+    }).catch(function () { status(L("st.readfail"), true); });
   }
 
   async function ensureWallet() {
-    if (!window.ethereum) { status("No wallet found in this browser. Open this page inside your wallet browser.", true); return false; }
+    if (!window.ethereum) { status(L("st.nowallet"), true); return false; }
     if (signer) return true;
     try {
       provider = new ethers.BrowserProvider(window.ethereum);
@@ -85,90 +86,95 @@
       signer = await provider.getSigner();
       account = await signer.getAddress();
       $("wallet-line").textContent = account.slice(0, 6) + "…" + account.slice(-4);
-      $("connect-btn").textContent = "Wallet connected";
+      $("connect-btn").textContent = L("mk.connected");
       return true;
     } catch (e) {
-      if (e && e.code === 4001) status("Wallet request rejected.");
-      else status("Wallet connection failed.");
+      if (e && e.code === 4001) status(L("st.rejected"));
+      else status(L("st.connfail"));
       return false;
     }
   }
 
   async function doBuy(id, price, btn) {
     if (!(await ensureWallet())) return;
-    busy = true; btn.disabled = true; btn.textContent = "Confirm in wallet…";
+    busy = true; btn.disabled = true; btn.textContent = L("st.confirm");
     try {
       var mkt = new ethers.Contract(N.market, MKT_ABI, signer);
       var tx = await mkt.buy(id, { value: price });
-      btn.textContent = "Confirming…";
+      btn.textContent = L("st.confirming");
       await tx.wait();
-      status("Purchase confirmed. Nova #" + id + " is yours.");
+      status(L("st.buyok", { id: id }));
       loadListings();
     } catch (e) {
-      if (e && e.code === 4001) status("Purchase rejected in wallet.");
-      else status("Purchase failed. Listing may have changed.");
+      if (e && e.code === 4001) status(L("st.buyrej"));
+      else status(L("st.buyfail"));
     }
-    busy = false; btn.disabled = false; btn.textContent = "Buy";
+    busy = false; btn.disabled = false; btn.textContent = L("st.buyfor", { p: fmtBnb(price) });
   }
 
   async function doDelist(id, btn) {
     if (!(await ensureWallet())) return;
-    busy = true; btn.disabled = true; btn.textContent = "Confirm in wallet…";
+    busy = true; btn.disabled = true; btn.textContent = L("st.confirm");
     try {
       var mkt = new ethers.Contract(N.market, MKT_ABI, signer);
       var tx = await mkt.delist(id);
       await tx.wait();
-      status("Delisted. Nova #" + id + " is back in your wallet.");
+      status(L("st.delistok", { id: id }));
       loadListings();
     } catch (e) {
-      if (e && e.code === 4001) status("Delist rejected in wallet.");
-      else status("Delist failed.");
+      if (e && e.code === 4001) status(L("st.delistrej"));
+      else status(L("st.delistfail"));
     }
-    busy = false; btn.disabled = false; btn.textContent = "Delist";
+    busy = false; btn.disabled = false; btn.textContent = L("st.delist");
   }
 
   $("connect-btn").addEventListener("click", async function () {
-    if (await ensureWallet()) { status("Wallet connected."); loadListings(); }
+    if (await ensureWallet()) { status(L("st.connected")); loadListings(); }
   });
 
   $("sell-btn").addEventListener("click", async function () {
     if (busy) return;
     var id = Number($("sell-id").value);
     var priceTxt = ($("sell-price").value || "").trim();
-    if (!id || id < 1) { status("Enter a valid work number."); return; }
+    if (!id || id < 1) { status(L("st.badid")); return; }
     var price;
-    try { price = ethers.parseEther(priceTxt); } catch (e) { status("Enter a valid BNB price."); return; }
-    if (price <= 0n) { status("Price must be above zero."); return; }
+    try { price = ethers.parseEther(priceTxt); } catch (e) { status(L("st.badprice")); return; }
+    if (price <= 0n) { status(L("st.pricepos")); return; }
     if (!(await ensureWallet())) return;
     busy = true;
     var btn = $("sell-btn"); btn.disabled = true;
     try {
       var nft = new ethers.Contract(N.nft, NFT_ABI, signer);
       var owner = await nft.ownerOf(id);
-      if (owner.toLowerCase() !== account.toLowerCase()) { status("This wallet does not own Nova #" + id + ".", true); busy = false; btn.disabled = false; return; }
+      if (owner.toLowerCase() !== account.toLowerCase()) { status(L("st.notowner", { id: id }), true); busy = false; btn.disabled = false; btn.textContent = L("sell.btn"); return; }
       var approved = await nft.getApproved(id);
       if (approved.toLowerCase() !== N.market.toLowerCase()) {
-        btn.textContent = "Confirm approve in wallet…";
+        btn.textContent = L("st.approveconfirm");
         var atx = await nft.approve(N.market, id);
         await atx.wait();
       }
-      btn.textContent = "Confirm listing in wallet…";
+      btn.textContent = L("st.listconfirm");
       var mkt = new ethers.Contract(N.market, MKT_ABI, signer);
       var ltx = await mkt.list(id, price);
       await ltx.wait();
-      status("Listed. Nova #" + id + " is on the market.");
+      status(L("st.listok", { id: id }));
       loadListings();
     } catch (e) {
-      if (e && e.code === 4001) status("Listing rejected in wallet.");
-      else status("Listing failed. Check ownership and try again.");
+      if (e && e.code === 4001) status(L("st.listrej"));
+      else status(L("st.listfail"));
     }
-    busy = false; btn.disabled = false; btn.textContent = "Approve and list";
+    busy = false; btn.disabled = false; btn.textContent = L("sell.btn");
   });
 
   if (window.ethereum) {
     window.ethereum.on && window.ethereum.on("accountsChanged", function () { location.reload(); });
     window.ethereum.on && window.ethereum.on("chainChanged", function () { location.reload(); });
   }
+
+  document.addEventListener("nova:lang", function () {
+    if (account) $("connect-btn").textContent = L("mk.connected");
+    loadListings();
+  });
 
   loadListings();
   setInterval(loadListings, 45000);
