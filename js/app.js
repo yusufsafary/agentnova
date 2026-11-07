@@ -65,6 +65,24 @@
   }
   document.addEventListener("nova:lang", function () { tickClock(); renderP2(); });
 
+  // Gentle reveal on scroll for gate content.
+  (function () {
+    var els = document.querySelectorAll(".gate .lane, .gate .prompt-card, .gate .checker, .gate .workcard, .gate .facts, .gate .btn");
+    var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!("IntersectionObserver" in window) || reduced) return;
+    els.forEach(function (el) { el.classList.add("rv"); });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.1 });
+    els.forEach(function (el) { io.observe(el); });
+  })();
+
+  // Enter key runs the wallet check.
+  var ca = $("check-addr");
+  if (ca) ca.addEventListener("keydown", function (e) { if (e.key === "Enter") $("check-btn").click(); });
+
   // Wallet checker: shows the wallet's own question and status. Read-only.
   var btn = $("check-btn");
   if (btn) btn.addEventListener("click", function () {

@@ -192,3 +192,33 @@ footer p { color: var(--faint); font-size: 13px; line-height: 1.6; }
   .hero-copy { padding-left: 34px; padding-right: 34px; }
   header.site { padding-left: 22px; padding-right: 22px; }
 }
+
+/* ---- Polish pass v4: smoothness ---- */
+html { scroll-behavior: smooth; }
+.gate, footer { scroll-margin-top: 84px; }
+::selection { background: #f4f4f2; color: #000; }
+:focus-visible { outline: 2px solid #f4f4f2; outline-offset: 3px; border-radius: 4px; }
+::-webkit-scrollbar { width: 9px; }
+::-webkit-scrollbar-track { background: #050506; }
+::-webkit-scrollbar-thumb { background: #26262c; border-radius: 99px; border: 2px solid #050506; }
+.stat b, #cd { font-variant-numeric: tabular-nums; }
+header.site nav a { transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease; }
+.btn { transition: transform 0.15s ease, opacity 0.2s ease; }
+.btn:active { transform: scale(0.98); }
+.rv { opacity: 0; transform: translateY(16px); transition: opacity 0.7s cubic-bezier(0.2, 0.6, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.6, 0.2, 1); }
+.rv.in { opacity: 1; transform: none; }
+.mkt-card { animation: fadeUp 0.5s cubic-bezier(0.2, 0.6, 0.2, 1) both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (hover: hover) {
+  .mkt-card { transition: border-color 0.25s ease, transform 0.25s ease; }
+  .mkt-card:hover { border-color: #3d3d45; transform: translateY(-3px); }
+  .lane { transition: border-color 0.25s ease; }
+  .lane:hover { border-color: #2c2c33; }
+}
+#m-status { transition: opacity 0.25s ease, transform 0.25s ease; }
+#m-status:empty { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .rv { opacity: 1; transform: none; transition: none; }
+  .mkt-card { animation: none; }
+}

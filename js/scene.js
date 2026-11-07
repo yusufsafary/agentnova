@@ -11,6 +11,9 @@ import * as THREE from "../vendor/three.module.js";
     renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
   } catch (e) { canvas.style.display = "none"; return; }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  var MOBILE = Math.min(window.innerWidth, window.innerHeight) < 760;
+  if (MOBILE) renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  var PF = MOBILE ? 0.55 : 1; // particle factor on small screens
 
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
@@ -47,8 +50,8 @@ import * as THREE from "../vendor/three.module.js";
   var blobs = [[0, 0, 0], [1.8, 0.5, -0.6], [-2.0, -0.4, 0.5], [0.9, -1.1, 0.9],
     [-1.1, 1.2, -0.8], [2.6, -1.2, -1.4], [-2.7, 0.9, 1.2], [0.2, 1.9, -1.6]];
   var cloud = new THREE.Group();
-  cloud.add(makeCloud(2400, blobs, 1.05, 0.055, 0.85));
-  cloud.add(makeCloud(3200, blobs, 2.1, 0.04, 0.4));
+  cloud.add(makeCloud(Math.round(2400 * PF), blobs, 1.05, 0.055, 0.85));
+  cloud.add(makeCloud(Math.round(3200 * PF), blobs, 2.1, 0.04, 0.4));
   scene.add(cloud);
 
   // distant stars
@@ -150,10 +153,19 @@ import * as THREE from "../vendor/three.module.js";
   window.addEventListener("resize", resize);
   resize();
 
+  // Pause rendering when the tab is hidden or the hero is off screen.
   var clock = new THREE.Clock();
-  (function tick() {
-    requestAnimationFrame(tick);
-    var t = clock.getElapsedTime();
+  var T = 0, raf = null;
+  function start() { if (raf === null) { clock.getDelta(); raf = requestAnimationFrame(tick); } }
+  function stop() { if (raf !== null) { cancelAnimationFrame(raf); raf = null; } }
+  document.addEventListener("visibilitychange", function () { document.hidden ? stop() : start(); });
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (es) { es[0].isIntersecting ? start() : stop(); }, { threshold: 0.02 }).observe(canvas);
+  }
+  function tick() {
+    raf = requestAnimationFrame(tick);
+    T += Math.min(clock.getDelta(), 0.05);
+    var t = T;
     cloud.rotation.y = t * 0.021 + targetRY;
     cloud.rotation.x = Math.sin(t * 0.05) * 0.05 + targetRX;
     if (cloud.userData.ring) {
@@ -163,5 +175,6 @@ import * as THREE from "../vendor/three.module.js";
     beamGroup.rotation.x = Math.sin(t * 0.11) * 0.14;
     core.scale.setScalar(1 + Math.sin(t * 2.2) * 0.06);
     renderer.render(scene, camera);
-  })();
+  }
+  start();
 })();
