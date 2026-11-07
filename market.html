@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Market · AgentNova</title>
+<meta name="description" content="Official AgentNova escrow market. Remnants trade from minute one, even while unrevealed."/>
+<link rel="icon" href="logo.svg" type="image/svg+xml"/>
+<link rel="stylesheet" href="css/style.css?v=1"/>
+</head>
+<body>
+<div class="strip"><span>OFFICIAL MARKET · ESCROW · 2.5% FEE PER SALE · TIMES IN UTC</span></div>
+
+<header class="site">
+  <a class="brand" href="./">
+    <img src="logo.svg" alt="AgentNova logo" width="30" height="30"/>
+    <span>AGENT<b>NOVA</b></span>
+  </a>
+  <nav>
+    <a href="./#mint">Mint</a>
+    <a href="market.html">Market</a>
+    <a href="agentnova-skill.md">Skill file</a>
+  </nav>
+</header>
+
+<main>
+<section class="gate">
+  <div class="gate-head">
+    <p class="kicker">MARKET</p>
+    <h2>Dark remnants, traded blind.</h2>
+  </div>
+  <p class="wide">Listings sit in escrow inside the market contract until sold or delisted. Buyers pay the exact listed price: 97.5% reaches the seller instantly, 2.5% goes to the project. A work keeps its mint history and seed wherever it travels.</p>
+
+  <div class="mkt-board">
+    <div class="stat"><span>LISTED</span><b id="mk-listed">0</b></div>
+    <div class="stat"><span>FLOOR</span><b id="mk-floor">·</b></div>
+  </div>
+
+  <div style="margin-top:20px">
+    <button id="connect-btn" class="btn" type="button">Connect wallet</button>
+    <span id="wallet-line" style="font-family:'Space Mono',monospace;font-size:12px;color:var(--dim);margin-left:10px"></span>
+  </div>
+
+  <div id="mkt-grid" class="mkt-grid"></div>
+  <p id="mkt-empty" class="empty-note">No listings yet. First listings can appear as soon as minting opens.</p>
+
+  <div class="mkt-form">
+    <p class="kicker">SELL A WORK</p>
+    <input id="sell-id" type="number" min="1" placeholder="Work number (token ID)"/>
+    <input id="sell-price" type="text" inputmode="decimal" placeholder="Price in BNB, e.g. 0.01"/>
+    <button id="sell-btn" class="btn" type="button" style="width:100%">Approve and list</button>
+    <p class="empty-note">Listing moves your work into the market contract until it sells or you delist. Two wallet confirmations: approve, then list.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="contracts">
+    <a href="https://bscscan.com/address/0x5a5217145212bCbbE6f903f72467636C7eB15b92" target="_blank" rel="noopener">NFT contract</a>
+    <a href="https://bscscan.com/address/0x5c661576D9C6BfB9b4beB277A4fa892F45F0591E" target="_blank" rel="noopener">Market contract</a>
+    <a href="./">Back to mint</a>
+  </div>
+  <p class="foot-brand">AGENTNOVA · agentnova.fun</p>
+</footer>
+
+<div id="m-status"></div>
+
+<script src="js/config.js?v=1"></script>
+<script src="js/read.js?v=1"></script>
+<script src="js/ethers.umd.min.js"></script>
+<script src="js/market.js?v=1"></script>
+</body>
+</html>

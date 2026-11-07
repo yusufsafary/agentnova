@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>AgentNova · Supernova Remnant NFTs on BNB Chain</title>
+<meta name="description" content="AgentNova: 6,666 supernova remnant works on BNB Chain. Minted dark, revealed 24 hours after opening. Free first mint for Agent ID holders who answer one small question. No token. Pure art."/>
+<link rel="icon" href="logo.svg" type="image/svg+xml"/>
+<link rel="stylesheet" href="css/style.css?v=1"/>
+</head>
+<body>
+<div class="strip"><span id="strip-text">MINT OPENS 7 NOV 2026 · 06:00 UTC · REVEAL 8 NOV 2026 · 06:00 UTC</span></div>
+
+<header class="site">
+  <a class="brand" href="./">
+    <img src="logo.svg" alt="AgentNova logo" width="30" height="30"/>
+    <span>AGENT<b>NOVA</b></span>
+  </a>
+  <nav>
+    <a href="#mint">Mint</a>
+    <a href="market.html">Market</a>
+    <a href="agentnova-skill.md">Skill file</a>
+  </nav>
+</header>
+
+<section id="hero">
+  <canvas id="scene"></canvas>
+  <div class="hero-copy">
+    <p class="kicker">SUPERNOVA REMNANT · 6,666 WORKS · NO TOKEN</p>
+    <h1>Born dark.<br/>Revealed in a day.</h1>
+    <p class="lede">Every AgentNova work starts as a dark remnant, a cloud of star debris turning around a neutron star. Minting locks its seed on chain. Exactly 24 hours after opening, every remnant lights up at once.</p>
+    <div class="board">
+      <div class="stat"><span>MINTED</span><b id="b-minted">0</b></div>
+      <div class="stat"><span>SUPPLY LEFT</span><b id="b-left">6,666</b></div>
+      <div class="stat"><span>ON MARKET</span><b id="b-listed">0</b></div>
+      <div class="stat gold"><span id="cd-label">MINT OPENS IN</span><b id="cd">--:--:--</b></div>
+    </div>
+    <div class="bar"><i id="supply-bar"></i></div>
+    <p class="hero-note">Drag the remnant. Yours will move the same way, driven by its own seed.</p>
+  </div>
+</section>
+
+<main>
+<section class="gate" id="mint">
+  <div class="gate-head">
+    <p class="kicker">01 · MINT</p>
+    <h2>Two ways in.</h2>
+  </div>
+  <div class="lanes">
+    <article class="lane">
+      <p class="lane-tag">FREE LANE</p>
+      <h3>One free mint, one small question</h3>
+      <p>Wallets holding an Agent ID mint once for free. Your agent reads a small arithmetic question written for your wallet alone, answers it inside the mint transaction, and the remnant is yours. Wrong answer, no mint.</p>
+      <ul>
+        <li>1 free per wallet, Agent ID required</li>
+        <li>Question is unique per wallet, answered on chain</li>
+        <li>Runs through your Binance Agentic Wallet agent</li>
+      </ul>
+    </article>
+    <article class="lane">
+      <p class="lane-tag">PAID LANE</p>
+      <h3>Rp8,000 in BNB, no question</h3>
+      <p>Paid mints skip the question and stay open to every wallet, with or without an Agent ID. Price is fixed in the contract and paid in BNB.</p>
+      <ul>
+        <li>Rp8,000 in BNB per work, fixed on chain</li>
+        <li>Any wallet, no Agent ID needed</li>
+        <li>Max 20 works per wallet across both lanes</li>
+      </ul>
+    </article>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-head"><span>AGENT PROMPT</span><button id="copy-prompt" type="button">Copy prompt</button></div>
+    <pre id="agent-prompt">Read https://agentnova.fun/agentnova-skill.md and follow it exactly to mint AgentNova for me. If my wallet holds an Agent ID and my free mint is unused, use the free lane: read my question from the contract, answer it, and mint. Otherwise use the paid lane. Show me a clean preview before signing anything.</pre>
+  </div>
+
+  <div class="checker">
+    <p class="kicker">WALLET CHECK</p>
+    <div class="check-row">
+      <input id="check-addr" type="text" placeholder="Paste your BSC wallet address" spellcheck="false"/>
+      <button id="check-btn" type="button">Check</button>
+    </div>
+    <pre id="check-out">Your question and free mint status appear here. Read-only, nothing is signed.</pre>
+  </div>
+
+  <div class="cardrow">
+    <figure class="workcard">
+      <img src="art/unrevealed.svg" alt="Unrevealed AgentNova work"/>
+      <figcaption>EVERY WORK UNTIL REVEAL · UNREVEALED</figcaption>
+    </figure>
+    <div class="facts">
+      <div class="fact"><span>SUPPLY</span><b>6,666</b></div>
+      <div class="fact"><span>REVEAL</span><b>Opening + 24 hours, by contract clock</b></div>
+      <div class="fact"><span>CLASSES</span><b>Ember ±70% · Nova ±27% · Supernova ±3%</b></div>
+      <div class="fact"><span>AFTER REVEAL</span><b>Animated remnant per work, seed-driven, moving forever</b></div>
+      <div class="fact"><span>TOKEN</span><b>None. AgentNova is art only</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="gate" id="market">
+  <div class="gate-head">
+    <p class="kicker">02 · MARKET</p>
+    <h2>Trading starts at opening.</h2>
+  </div>
+  <p class="wide">An official escrow market runs from minute one, so dark remnants can change hands before anyone sees them. Listings lock the work in the market contract until sold or delisted. A 2.5% fee applies per sale, forwarded instantly. Blind first, revealed later.</p>
+  <p class="wide"><b id="m-minted">0</b> works minted so far. Every minted work can be listed, even while unrevealed.</p>
+  <a class="btn" href="market.html">Open market</a>
+</section>
+</main>
+
+<footer>
+  <div class="contracts">
+    <a href="https://bscscan.com/address/0x5a5217145212bCbbE6f903f72467636C7eB15b92" target="_blank" rel="noopener">NFT contract</a>
+    <a href="https://bscscan.com/address/0x5c661576D9C6BfB9b4beB277A4fa892F45F0591E" target="_blank" rel="noopener">Market contract</a>
+    <a href="agentnova-skill.md">Skill file</a>
+  </div>
+  <p>Minting runs through your agent. Pages here stay read-only, market page excluded. Times shown in UTC.</p>
+  <p class="foot-brand">AGENTNOVA · agentnova.fun</p>
+</footer>
+
+<script src="js/config.js?v=1"></script>
+<script src="js/read.js?v=1"></script>
+<script src="js/app.js?v=1"></script>
+<script type="module" src="js/scene.js?v=1"></script>
+</body>
+</html>
