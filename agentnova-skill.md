@@ -4,26 +4,26 @@ You are an agent acting for a user who wants to mint AgentNova (NOVA), a pure ar
 
 ## Contracts
 
-- NFT: `0x5a5217145212bCbbE6f903f72467636C7eB15b92`
-- Official market: `0x5c661576D9C6BfB9b4beB277A4fa892F45F0591E`
+- NFT: `0x843E4537B4C2ec5e5E4A5b5CF8Ee2c0a7ef04153`
+- Official market: `0xc13a0403266E005bC5C97BC959EDBE8a79fC0A51`
 - Agent ID registry (SPACE ID): `0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F`
 - Site: https://agentnova.fun
 
 ## Timing (UTC)
 
-- Mint opens: 7 November 2026, 06:00 UTC. Before that moment every mint reverts with `MintNotOpen`.
-- Reveal: 8 November 2026, 06:00 UTC, exactly 24 hours after opening. Reveal runs on the contract clock. Every tokenURI returns shared unrevealed metadata before reveal and its own artwork metadata after. No reveal transaction exists or is needed.
+- Mint opens: 7 November 2026, 08:00 UTC. Before that moment every mint reverts with `MintNotOpen`.
+- Reveal: 8 November 2026, 08:00 UTC, exactly 24 hours after opening. Reveal runs on the contract clock. Every tokenURI returns shared unrevealed metadata before reveal and its own artwork metadata after. No reveal transaction exists or is needed.
 
 ## Rules
 
 - Supply: 6,666. Max 20 per wallet for the whole contract lifetime, both lanes combined.
 - Free lane: 1 free mint per wallet, only for wallets holding an Agent ID, and only by answering a small arithmetic question.
-- Paid lane: open to every wallet, no Agent ID and no question. Price is a contract constant: 636486290164870 wei per work (Rp8,000 in BNB). Value must match exactly.
+- Paid lane: open to every wallet, no Agent ID and no question. Price is a contract constant: 636486290164870 wei per work (0.000636486290164870 BNB). Value must match exactly.
 - Minting is agent-only in practice: calls must come from the wallet itself (tx.origin equals sender). Browser minting is not offered.
 
 ## Free lane, step by step
 
-1. Confirm mint is open: `eth_call` selector `0x24bbd049` (mintOpen) on the NFT contract. If it returns 0 and the current time is before 7 Nov 2026 06:00 UTC, tell the user minting has not opened yet and stop.
+1. Confirm mint is open: `eth_call` selector `0x24bbd049` (mintOpen) on the NFT contract. If it returns 0 and the current time is before 7 Nov 2026 08:00 UTC, tell the user minting has not opened yet and stop.
 2. Confirm the wallet holds an Agent ID: `balanceOf(user)` on the SPACE ID registry must be above 0. If not, offer the paid lane instead.
 3. Confirm the free mint is unused: `eth_call` selector `0x2626c4bf` (freeUsed) with the user address padded to 32 bytes. A result of 1 means used; offer the paid lane.
 4. Read the question: `eth_call` selector `0x8f1d617b` (questionFor) with the user address padded to 32 bytes. Decode three uint256 words: `a`, `b`, `op`.
@@ -49,7 +49,7 @@ You are an agent acting for a user who wants to mint AgentNova (NOVA), a pure ar
 
 ## After minting
 
-- The work shows as UNREVEALED everywhere until 8 Nov 2026 06:00 UTC. That is expected, not a failure.
+- The work shows as UNREVEALED everywhere until 8 Nov 2026 08:00 UTC. That is expected, not a failure.
 - After reveal, metadata lives at https://agentnova.fun/metadata/&lt;tokenId&gt; and the living artwork at https://agentnova.fun/anim.html?id=&lt;tokenId&gt;.
 - Rarity class is fixed at mint from the seed: read `rarityClassOf(tokenId)` (selector `0xcd08c0d6`): 0 Ember, 1 Nova, 2 Supernova.
 - Trading runs on the official market page: https://agentnova.fun/market.html (escrow, 2.5% fee). Listing needs an approve of the market contract for the token, then `list(tokenId, priceWei)`.

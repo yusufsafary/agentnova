@@ -25,17 +25,17 @@
       phase = "pre";
       if (label) label.textContent = "MINT OPENS IN";
       if (cd) cd.textContent = cdText(N.openTime);
-      if (strip) strip.textContent = "MINT OPENS " + utcText(N.openTime) + " · REVEAL " + utcText(N.revealTime);
+      if (strip) strip.textContent = "OPENS " + utcText(N.openTime) + " · REVEAL " + utcText(N.revealTime);
     } else if (now < N.revealTime) {
       phase = "live";
       if (label) label.textContent = "REVEAL IN";
       if (cd) cd.textContent = cdText(N.revealTime);
-      if (strip) strip.textContent = "MINT IS LIVE · REVEAL " + utcText(N.revealTime);
+      if (strip) strip.textContent = "MINT LIVE · REVEAL " + utcText(N.revealTime);
     } else {
       phase = "revealed";
       if (label) label.textContent = "REVEALED";
       if (cd) cd.textContent = "LIVE";
-      if (strip) strip.textContent = "MINT IS LIVE · REVEALED " + utcText(N.revealTime);
+      if (strip) strip.textContent = "MINT LIVE · REVEALED " + utcText(N.revealTime);
     }
   }
   tickClock();

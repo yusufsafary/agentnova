@@ -18,8 +18,8 @@ a { color: var(--ink); }
 img { display: block; max-width: 100%; }
 
 .strip {
-  border-bottom: 1px solid var(--line); padding: 8px 14px; text-align: center;
-  font-family: "Space Mono", monospace; font-size: 11px; letter-spacing: 0.14em;
+  border-bottom: 1px solid var(--line); padding: 8px 10px; text-align: center;
+  font-family: "Space Mono", monospace; font-size: 10.5px; letter-spacing: 0.07em;
   color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
@@ -152,6 +152,28 @@ footer p { color: var(--faint); font-size: 13px; line-height: 1.6; }
 }
 #m-status.show { display: block; }
 .empty-note { color: var(--faint); font-family: "Space Mono", monospace; font-size: 12.5px; margin-top: 18px; }
+
+@media (max-width: 640px) {
+  .strip { font-size: 9.5px; letter-spacing: 0.04em; padding: 8px 6px; }
+  header.site { flex-wrap: wrap; padding: 12px 14px 14px; }
+  .brand { font-size: 14px; }
+  header.site nav { order: 3; width: 100%; margin-top: 11px; gap: 8px; overflow: visible; }
+  header.site nav a { flex: 1; text-align: center; padding: 9px 6px; }
+  #hero { min-height: 94svh; }
+  .hero-copy { padding: 64px 16px 22px; }
+  h1 { font-size: clamp(38px, 12.5vw, 84px); }
+  .lede { font-size: 15px; }
+  .stat { padding: 11px 12px; }
+  .stat b { font-size: 21px; }
+  .gate { padding: 48px 0 4px; }
+  .lane { padding: 18px; }
+  .prompt-card pre { font-size: 12px; padding: 14px; }
+  .check-row { flex-direction: column; }
+  .check-row button { width: 100%; padding: 12px; }
+  .fact { flex-direction: column; gap: 3px; }
+  .fact b { text-align: left; }
+  footer { padding-bottom: 70px; }
+}
 
 @media (min-width: 760px) {
   .board { grid-template-columns: repeat(4, 1fr); }
