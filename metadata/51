@@ -1,0 +1,16 @@
+{
+ "name": "AgentNova #51",
+ "description": "A supernova remnant on BNB Chain. Born dark at mint, revealed 24 hours after opening. Seed locked on chain, artwork animated forever. No token, pure art.",
+ "image": "https://agentnova.fun/art/51.svg",
+ "animation_url": "https://agentnova.fun/anim.html?id=51",
+ "attributes": [
+  {
+   "trait_type": "Class",
+   "value": "Ember"
+  },
+  {
+   "trait_type": "Seed",
+   "value": "43157124632819122327085224000870788223573014089522011105638358290372242046377"
+  }
+ ]
+}
