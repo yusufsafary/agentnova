@@ -1,0 +1,27 @@
+{
+ "name": "AgentNova Remnant N\u00ba 111",
+ "description": "A Remnant struck in an AgentNova Cycle. One Cycle opens every four hours; the first Remnant of each Cycle is free for Agent ID holders. When the Cycle seals, its star earns a verdict and the Remnant claims $NOVA.",
+ "image": "https://agentnova.fun/metadata/remnant/img/111.svg",
+ "attributes": [
+  {
+   "trait_type": "Cycle",
+   "value": "Pending"
+  },
+  {
+   "trait_type": "Class",
+   "value": "PENDING"
+  },
+  {
+   "trait_type": "Stage",
+   "value": "SIGNAL"
+  },
+  {
+   "trait_type": "Origin",
+   "value": "BINARY REMNANT"
+  },
+  {
+   "trait_type": "Citizens",
+   "value": 0
+  }
+ ]
+}
