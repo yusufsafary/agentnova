@@ -5,15 +5,15 @@
  "attributes": [
   {
    "trait_type": "Cycle",
-   "value": "Pending"
+   "value": 1
   },
   {
    "trait_type": "Class",
-   "value": "PENDING"
+   "value": "RADIANT"
   },
   {
    "trait_type": "Stage",
-   "value": "SIGNAL"
+   "value": "AWAKENING"
   },
   {
    "trait_type": "Origin",
@@ -21,7 +21,7 @@
   },
   {
    "trait_type": "Citizens",
-   "value": 0
+   "value": 44
   }
  ]
 }

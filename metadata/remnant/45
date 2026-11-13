@@ -5,7 +5,7 @@
  "attributes": [
   {
    "trait_type": "Cycle",
-   "value": "Pending"
+   "value": 2
   },
   {
    "trait_type": "Class",
@@ -21,7 +21,7 @@
   },
   {
    "trait_type": "Citizens",
-   "value": 0
+   "value": 2
   }
  ]
 }
