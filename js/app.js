@@ -1,121 +1,97 @@
+// AgentNova · papan live beranda + tabel Cycle terakhir.
 (function () {
-  var N = window.NOVA, R = window.NovaRead;
-  var L = function (k, v) { return window.NovaLang ? window.NovaLang.t(k, v) : k; };
-  var $ = function (id) { return document.getElementById(id); };
-  var fmt = function (n) { return Number(n).toLocaleString("en-US"); };
+  const C = window.NOVA, Z = window.WZ;
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n) => Number(n).toLocaleString("en-US");
+  const fmtW = (wei) => fmt(Math.floor(Number(BigInt(wei) / 1000000000000n) / 1e6)) ;
+  let endTs = 0, trackTimer = null;
 
-  function pad2(n) { return String(n).padStart(2, "0"); }
-  function cdText(target) {
-    var s = Math.max(0, Math.floor(target - Date.now() / 1000));
-    var d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600),
-        m = Math.floor((s % 3600) / 60), ss = s % 60;
-    return (d > 0 ? d + "D " : "") + pad2(h) + ":" + pad2(m) + ":" + pad2(ss);
-  }
-  function utcText(ts) {
-    var d = new Date(ts * 1000);
-    var mon = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
-    return d.getUTCDate() + " " + mon[d.getUTCMonth()] + " · " +
-      pad2(d.getUTCHours()) + ":" + pad2(d.getUTCMinutes()) + " UTC";
-  }
-
-  var phase = "pre"; // pre -> live -> revealed
-  function tickClock() {
-    var now = Date.now() / 1000;
-    var cd = $("cd"), label = $("cd-label"), strip = $("strip-text");
-    if (now < N.openTime) {
-      phase = "pre";
-      if (label) label.textContent = L("cd.opens");
-      if (cd) cd.textContent = cdText(N.openTime);
-      if (strip) strip.textContent = L("strip.opens") + " " + utcText(N.openTime) + " · " + L("strip.reveal") + " " + utcText(N.revealTime);
-    } else if (now < N.revealTime) {
-      phase = "live";
-      if (label) label.textContent = L("cd.reveal");
-      if (cd) cd.textContent = cdText(N.revealTime);
-      if (strip) strip.textContent = L("strip.live") + " · " + L("strip.reveal") + " " + utcText(N.revealTime);
-    } else {
-      phase = "revealed";
-      if (label) label.textContent = L("cd.revealed");
-      if (cd) cd.textContent = "LIVE";
-      if (strip) strip.textContent = L("strip.live") + " · " + L("strip.revealed") + " " + utcText(N.revealTime);
+  function tick() {
+    const el = $("sealIn");
+    if (!el || !endTs) return;
+    let s = Math.max(0, endTs - Math.floor(Date.now() / 1000));
+    const h = String(Math.floor(s / 3600)).padStart(2, "0");
+    const m = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
+    const ss = String(s % 60).padStart(2, "0");
+    el.textContent = `${h}:${m}:${ss}`;
+    const bar = $("winBar");
+    if (bar) {
+      const total = 14400;
+      const done = Math.min(1, Math.max(0, (total - s) / total));
+      bar.style.width = (done * 100).toFixed(1) + "%";
     }
   }
-  tickClock();
-  setInterval(tickClock, 1000);
 
-  function refreshBoard() {
-    R.call(N.nft, N.sel.totalMinted).then(function (hex) {
-      var minted = Number(BigInt(hex));
-      var el = $("b-minted"); if (el) el.textContent = fmt(minted);
-      var left = $("b-left"); if (left) left.textContent = fmt(N.maxSupply - minted);
-      var bar = $("supply-bar"); if (bar) bar.style.width = (minted / N.maxSupply * 100).toFixed(2) + "%";
-      lastMinted = minted; renderP2();
-    }).catch(function () {});
-    R.call(N.market, N.sel.listedIds).then(function (hex) {
-      var w = R.words(hex);
-      var count = w.length > 1 ? Number(w[1]) : 0;
-      var el = $("b-listed"); if (el) el.textContent = fmt(count);
-    }).catch(function () {});
+  function utc(ts) {
+    const d = new Date(ts * 1000);
+    const p = (x) => String(x).padStart(2, "0");
+    return `${p(d.getUTCDate())}/${p(d.getUTCMonth() + 1)} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())} UTC`;
   }
-  refreshBoard();
-  setInterval(refreshBoard, 30000);
-  var lastMinted = 0;
-  function renderP2() {
-    var el = $("mkt-p2"); if (!el) return;
-    el.innerHTML = L("mkt.p2", { n: '<b id="m-minted">' + fmt(lastMinted) + "</b>" });
-  }
-  document.addEventListener("nova:lang", function () { tickClock(); renderP2(); });
 
-  // Gentle reveal on scroll for gate content.
-  (function () {
-    var els = document.querySelectorAll(".gate .lane, .gate .prompt-card, .gate .checker, .gate .workcard, .gate .facts, .gate .btn");
-    var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!("IntersectionObserver" in window) || reduced) return;
-    els.forEach(function (el) { el.classList.add("rv"); });
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+  async function load() {
+    const S = C.sel;
+    const head = await Z.batch([
+      { to: C.remnants, data: S.genesisOpen },
+      { to: C.remnants, data: S.currentCycle },
+      { to: C.remnants, data: S.totalRemnants },
+      { to: C.claim, data: S.totalClaimed },
+      { to: C.claim, data: S.poolBalance },
+      { to: C.claim, data: S.claimOpen },
+    ]);
+    const open = Z.toBool(head[0]);
+    const cur = Z.toInt(head[1]);
+    const total = Z.toInt(head[2]);
+    const claimed = Z.toInt(head[3]);
+    const pool = head[4];
+    const claimOpen = Z.toBool(head[5]);
+
+    if ($("statRemnants")) $("statRemnants").textContent = fmt(total);
+    if ($("statPool")) $("statPool").textContent = fmt(Number(Z.toBig(pool) / 10n ** 18n)) + " NOVA";
+    if ($("claimState")) $("claimState").textContent = claimOpen ? "OPEN" : "OPENS WITH FIRST SEAL";
+    if ($("latestLine") && total > 0) $("latestLine").textContent = `+ remnant Nº ${fmt(total)} struck, just now`;
+
+    if (!open || cur === 0) {
+      if ($("cycleNo")) $("cycleNo").textContent = "Nº 1 · OPENS SOON";
+      if ($("boardBody")) $("boardBody").innerHTML = `<tr><td colspan="5" class="empty">Cycle Nº 1 has not opened yet. The board fills from the first seal.</td></tr>`;
+      if ($("statCitizens")) $("statCitizens").textContent = "0";
+      if ($("statUnclaimed")) $("statUnclaimed").textContent = "0";
+      return;
+    }
+
+    if ($("cycleNo")) $("cycleNo").textContent = `Nº ${fmt(cur)} · OPEN`;
+    const nums = [];
+    for (let n = cur; n >= Math.max(1, cur - 5); n--) nums.push(n);
+    const calls = [
+      Z.u256(S.cycleEnd, cur), Z.u256(S.remnantsInCycle, cur), Z.u256(S.participantsOf, cur),
+    ];
+    for (const n of nums) {
+      calls.push(Z.u256(S.remnantsInCycle, n), Z.u256(S.participantsOf, n), Z.u256(S.statusOf, n), Z.u256(S.cycleStart, n), Z.u256(S.cycleEnd, n));
+    }
+    const r = await Z.batch(calls);
+    endTs = Z.toInt(r[0]);
+    const inCur = Z.toInt(r[1]);
+    const coders = Z.toInt(r[2]);
+    if ($("statCitizens")) $("statCitizens").textContent = fmt(coders);
+    if ($("statUnclaimed")) $("statUnclaimed").textContent = fmt(Math.max(0, total - inCur - claimed));
+    if ($("trackStatus")) {
+      $("trackStatus").textContent = coders < 25 ? "FAINT" : coders <= 100 ? "RADIANT" : "SUPERNOVA";
+    }
+    if (trackTimer) clearInterval(trackTimer);
+    tick(); trackTimer = setInterval(tick, 1000);
+
+    const body = $("boardBody");
+    if (body) {
+      let html = "";
+      nums.forEach((n, i) => {
+        const b = 3 + i * 5;
+        const sn = Z.toInt(r[b]), cd = Z.toInt(r[b + 1]), st = Z.toInt(r[b + 2]);
+        const stName = n === cur ? "OPEN" : C.statusNames[st] || "PENDING";
+        html += `<tr><td class="serif">Nº ${fmt(n)}</td><td>${utc(Z.toInt(r[b + 3]))} – ${utc(Z.toInt(r[b + 4]))}</td><td>${fmt(sn)}</td><td>${fmt(cd)}</td><td><span class="st st-${stName.toLowerCase().replace(" ", "-")}">${stName}</span></td></tr>`;
       });
-    }, { threshold: 0.1 });
-    els.forEach(function (el) { io.observe(el); });
-  })();
+      body.innerHTML = html;
+    }
+  }
 
-  // Enter key runs the wallet check.
-  var ca = $("check-addr");
-  if (ca) ca.addEventListener("keydown", function (e) { if (e.key === "Enter") $("check-btn").click(); });
-
-  // Wallet checker: shows the wallet's own question and status. Read-only.
-  var btn = $("check-btn");
-  if (btn) btn.addEventListener("click", function () {
-    var addr = ($("check-addr").value || "").trim();
-    var out = $("check-out");
-    if (!/^0x[0-9a-fA-F]{40}$/.test(addr)) { out.textContent = L("check.invalid"); return; }
-    out.textContent = L("check.reading");
-    var q = R.call(N.nft, N.sel.questionFor + R.padAddr(addr));
-    var st = R.call(N.nft, N.sel.stats + R.padAddr(addr));
-    Promise.all([q, st]).then(function (res) {
-      var qw = R.words(res[0]);
-      var a = Number(qw[0]), b = Number(qw[1]), op = Number(qw[2]);
-      var sym = op === 0 ? "+" : op === 1 ? "−" : "×";
-      var sw = R.words(res[1]);
-      var hasId = sw[4] === 1n, hasMinted = sw[5] === 1n;
-      R.call(N.nft, N.sel.freeUsed + R.padAddr(addr)).then(function (fu) {
-        var used = R.words(fu)[0] === 1n;
-        var lines = [];
-        lines.push(L("check.agentid") + " " + (hasId ? L("check.held") : L("check.notheld")));
-        lines.push(L("check.free") + " " + (!hasId ? L("check.needid") : used ? L("check.used") : L("check.avail")));
-        if (hasId && !used) lines.push(L("check.question") + " " + a + " " + sym + " " + b + " = ?  " + L("check.qnote"));
-        lines.push(L("check.minted") + " " + (hasMinted ? L("check.yes") : L("check.notyet")) + L("check.tail"));
-        out.textContent = lines.join("\n");
-      }).catch(function () { out.textContent = L("check.fail"); });
-    }).catch(function () { out.textContent = L("check.fail"); });
-  });
-
-  // Copy agent prompt
-  var cp = $("copy-prompt");
-  if (cp) cp.addEventListener("click", function () {
-    var txt = $("agent-prompt").textContent;
-    if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () {
-      cp.textContent = L("prompt.copied"); setTimeout(function () { cp.textContent = L("prompt.copy"); }, 1600);
-    });
-  });
+  load();
+  setInterval(load, 30000);
 })();

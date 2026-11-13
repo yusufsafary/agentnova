@@ -1,132 +1,142 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>AgentNova · Supernova Remnant NFTs on BNB Chain</title>
-<meta name="description" content="AgentNova: 6,666 supernova remnant works on BNB Chain. Minted dark, revealed 24 hours after opening. Free first mint for Agent ID holders who answer one small question. No token. Pure art."/>
-<meta name="twitter:site" content="@agentnovafun"/>
-<link rel="icon" href="logo.svg" type="image/svg+xml"/>
-<link rel="stylesheet" href="css/style.css?v=4"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentNova · An Autonomous Digital Civilization</title>
+<meta name="description" content="A new Cycle opens every four hours on BNB Chain. The first Remnant of each Cycle is free for Agent ID holders. Sealed stars claim $NOVA.">
+<link rel="icon" href="img/logo.svg">
+<link rel="stylesheet" href="css/style.css?v=1">
 </head>
 <body>
-<div class="strip"><span id="strip-text">OPENS 7 NOV · 08:00 UTC · REVEAL 8 NOV · 08:00 UTC</span></div>
-
 <header class="site">
-  <a class="brand" href="./">
-    <img src="logo.svg" alt="AgentNova logo" width="30" height="30"/>
-    <span>AGENT<b>NOVA</b></span>
-  </a>
-  <nav>
-    <a href="#mint" data-i18n="nav.mint">Mint</a>
-    <a href="market.html" data-i18n="nav.market">Market</a>
-    <a href="agentnova-skill.md" data-i18n="nav.skill">Skill file</a>
-    <a href="https://x.com/agentnovafun" target="_blank" rel="noopener">𝕏 @agentnovafun</a>
-    <button class="lang-btn" type="button">中文</button>
-  </nav>
+  <div class="head-in">
+    <img src="img/logo.svg" alt="AgentNova logo">
+    <a class="brand" href="index.html">AGENTNOVA</a>
+    <nav class="main">
+      <a href="index.html#board">BOARD</a><a href="index.html#mint">MINT</a><a href="index.html#claim">CLAIM</a>
+      <a href="registry.html">REGISTRY</a><a href="tokenomics.html">TOKENOMICS</a><a href="docs.html">DOCS</a>
+    </nav>
+    <span class="commit-chip">CYCLE <b id="cycleNo">···</b></span>
+  </div>
 </header>
 
-<section id="hero">
-  <canvas id="scene"></canvas>
-  <div class="hero-copy">
-    <p class="kicker" data-i18n="hero.kicker">SUPERNOVA REMNANT · 6,666 WORKS · NO TOKEN</p>
-    <h1 data-i18n-html="hero.h1">Born dark.<br/>Revealed in a day.</h1>
-    <p class="lede" data-i18n="hero.lede">Every AgentNova work starts as a dark remnant, a cloud of star debris turning around a neutron star. Minting locks its seed on chain. Exactly 24 hours after opening, every remnant lights up at once.</p>
-    <div class="board">
-      <div class="stat"><span data-i18n="board.minted">MINTED</span><b id="b-minted">0</b></div>
-      <div class="stat"><span data-i18n="board.left">SUPPLY LEFT</span><b id="b-left">6,666</b></div>
-      <div class="stat"><span data-i18n="board.listed">ON MARKET</span><b id="b-listed">0</b></div>
-      <div class="stat gold"><span id="cd-label">MINT OPENS IN</span><b id="cd">--:--:--</b></div>
-    </div>
-    <div class="bar"><i id="supply-bar"></i></div>
-    <p class="hero-note" data-i18n="hero.note">Drag the remnant. Yours will move the same way, driven by its own seed.</p>
-  </div>
-</section>
-
 <main>
-<section class="gate" id="mint">
-  <div class="gate-head">
-    <p class="kicker" data-i18n="mint.kicker">01 · MINT</p>
-    <h2 data-i18n="mint.h2">Two ways in.</h2>
-  </div>
-  <div class="lanes">
-    <article class="lane">
-      <p class="lane-tag" data-i18n="free.tag">FREE LANE</p>
-      <h3 data-i18n="free.h3">One free mint, one small question</h3>
-      <p data-i18n="free.p">Wallets holding an Agent ID mint once for free. Your agent reads a small arithmetic question written for your wallet alone, answers it inside the mint transaction, and the remnant is yours. Wrong answer, no mint.</p>
-      <ul>
-        <li data-i18n="free.li1">1 free per wallet, Agent ID required</li>
-        <li data-i18n="free.li2">Question is unique per wallet, answered on chain</li>
-        <li data-i18n="free.li3">Runs through your Binance Agentic Wallet agent</li>
-      </ul>
-    </article>
-    <article class="lane">
-      <p class="lane-tag" data-i18n="paid.tag">PAID LANE</p>
-      <h3 data-i18n="paid.h3">0.000636 BNB, no question</h3>
-      <p data-i18n="paid.p">Paid mints skip the question and stay open to every wallet, with or without an Agent ID. Price is fixed in the contract and paid in BNB.</p>
-      <ul>
-        <li data-i18n="paid.li1">0.000636 BNB per work, fixed on chain</li>
-        <li data-i18n="paid.li2">Any wallet, no Agent ID needed</li>
-        <li data-i18n="paid.li3">Max 20 works per wallet across both lanes</li>
-      </ul>
-    </article>
+  <div class="hero">
+    <div class="kick">NOVA CIVILIZATION · BNB CHAIN</div>
+    <h1 class="display">Every agent<br>begins as<br>a <em>signal.</em></h1>
+    <p class="lede">AgentNova is an autonomous digital civilization, struck in starlight. One <b>Cycle</b> opens every four hours, then seals forever. The first <b>Remnant</b> of each Cycle is free to every verified agent. At seal, the star receives its verdict, and each Remnant claims <b>$NOVA</b>.</p>
   </div>
 
-  <div class="prompt-card">
-    <div class="prompt-head"><span data-i18n="prompt.label">AGENT PROMPT</span><button id="copy-prompt" type="button" data-i18n="prompt.copy">Copy prompt</button></div>
-    <pre id="agent-prompt">Read https://agentnova.fun/agentnova-skill.md and follow it exactly to mint AgentNova for me. If my wallet holds an Agent ID and my free mint is unused, use the free lane: read my question from the contract, answer it, and mint. Otherwise use the paid lane. Show me a clean preview before signing anything.</pre>
+  <div class="star" aria-label="Live neutron star">
+    <span class="ring" style="width:120px;height:120px"></span>
+    <span class="ring" style="width:196px;height:196px"></span>
+    <span class="ring dash" style="width:278px;height:278px"></span>
+    <span class="orbit"></span><span class="sat"><i></i></span>
+    <span class="core">NOVA</span>
+    <span class="tag" style="left:16px;top:14px">LIVE STAR</span>
+    <span class="tag hi" style="right:16px;top:14px">STAGE · SIGNAL</span>
+    <span class="cap" id="latestLine">+ the observatory is warming up</span>
   </div>
 
-  <div class="checker">
-    <p class="kicker" data-i18n="check.kicker">WALLET CHECK</p>
-    <div class="check-row">
-      <input id="check-addr" type="text" placeholder="Paste your BSC wallet address" data-i18n-ph="check.ph" spellcheck="false"/>
-      <button id="check-btn" type="button" data-i18n="check.btn">Check</button>
+  <div class="marquee"><span>FIRST REMNANT FREE ✦ EVERY 4 HOURS ✦ SEALED STARS CLAIM $NOVA ✦ 70 LEGACY REMNANTS HONORED FOREVER ✦ FIRST REMNANT FREE ✦ EVERY 4 HOURS ✦ SEALED STARS CLAIM $NOVA ✦ 70 LEGACY REMNANTS HONORED FOREVER ✦&nbsp;</span></div>
+
+  <div class="prog">
+    <div class="row"><span>SEALS IN <b id="sealIn">···</b></span><span>VERDICT TRACK · <b id="trackStatus">···</b></span></div>
+    <div class="rule"><i id="winBar"></i></div>
+  </div>
+
+  <div class="spec">
+    <div class="r"><span class="l">REMNANTS STRUCK</span><span class="v" id="statRemnants">···</span></div>
+    <div class="r"><span class="l">CITIZENS IN THIS CYCLE, UNIQUE</span><span class="v" id="statCitizens">···</span></div>
+    <div class="r"><span class="l">UNCLAIMED, SEALED REMNANTS</span><span class="v" id="statUnclaimed">···</span></div>
+    <div class="r"><span class="l">CLAIM POOL</span><span class="v" id="statPool">···</span></div>
+    <div class="r hot"><span class="l">CLAIMS</span><span class="v" id="claimState">···</span></div>
+  </div>
+
+  <section class="block" id="board">
+    <div class="sec-kick">BOARD</div>
+    <h2 class="sec">Recent <em>Cycles.</em></h2>
+    <p class="body">Every Cycle is a four-hour window, aligned to UTC boundaries. Verdict is set at seal by the number of unique citizens who struck a Remnant in it: under 25 is <b>Faint</b>, 25 to 100 is <b>Radiant</b>, above 100 is <b>Supernova</b>. A Remnant whose seed lands in the top 3% is a <b>Singularity</b>, whatever the crowd did. A Remnant's evolution stage follows its verdict: Faint is Genesis, Radiant is Awakening, Supernova is Ascension, Singularity stands alone.</p>
+    <div class="tablewrap">
+      <table class="board">
+        <thead><tr><th>Cycle</th><th>Window</th><th>Remnants</th><th>Citizens</th><th>Verdict</th></tr></thead>
+        <tbody id="boardBody"><tr><td colspan="5" class="empty">Reading the chain…</td></tr></tbody>
+      </table>
     </div>
-    <pre id="check-out" data-i18n="check.init">Your question and free mint status appear here. Read-only, nothing is signed.</pre>
-  </div>
+  </section>
 
-  <div class="cardrow">
-    <figure class="workcard">
-      <img src="art/unrevealed.svg" alt="Unrevealed AgentNova work"/>
-      <figcaption data-i18n="card.fig">EVERY WORK UNTIL REVEAL · UNREVEALED</figcaption>
-    </figure>
-    <div class="facts">
-      <div class="fact"><span data-i18n="fact.supply">SUPPLY</span><b>6,666</b></div>
-      <div class="fact"><span data-i18n="fact.reveal">REVEAL</span><b data-i18n="fact.reveal.v">Opening + 24 hours, by contract clock</b></div>
-      <div class="fact"><span data-i18n="fact.classes">CLASSES</span><b data-i18n="fact.classes.v">Ember ±70% · Nova ±27% · Supernova ±3%</b></div>
-      <div class="fact"><span data-i18n="fact.after">AFTER REVEAL</span><b data-i18n="fact.after.v">Animated remnant per work, seed-driven, moving forever</b></div>
-      <div class="fact"><span data-i18n="fact.token">TOKEN</span><b data-i18n="fact.token.v">None. AgentNova is art only</b></div>
-    </div>
-  </div>
-</section>
+  <section class="block" id="mint">
+    <div class="sec-kick">MINT</div>
+    <h2 class="sec">Struck by agents, <em>only.</em></h2>
+    <p class="body">There is no mint button here. Remnants are struck through your own agent, gated by a Binance Agent ID. Your agent reads the skill file, answers a small question bound to your wallet, and calls the contract. Humans read; agents mint.</p>
+    <ul class="body">
+      <li><b>First Remnant in each Cycle: free.</b> Zero price, zero commission.</li>
+      <li>Remnants 2 to 5 in the same Cycle: <b>0.0002 BNB</b> each. Remnants 6 to 10: <b>0.0004 BNB</b> each.</li>
+      <li>Maximum <b>10 Remnants per wallet per Cycle</b>. Paid amounts forward to the project wallet in the same transaction.</li>
+      <li>Every Remnant is a generative star plate, drawn from its on-chain seed. No two plates alike.</li>
+    </ul>
+    <p style="margin-top:20px"><a class="btn" href="agentnova-skill.md">AGENT SKILL FILE</a> <a class="btn ghost" href="docs.html">READ THE DOCS</a></p>
+  </section>
 
-<section class="gate" id="market">
-  <div class="gate-head">
-    <p class="kicker" data-i18n="mkt.kicker">02 · MARKET</p>
-    <h2 data-i18n="mkt.h2">Trading starts at opening.</h2>
-  </div>
-  <p class="wide" data-i18n="mkt.p1">An official escrow market runs from minute one, so dark remnants can change hands before anyone sees them. Listings lock the work in the market contract until sold or delisted. A 2.5% fee applies per sale, forwarded instantly. Blind first, revealed later.</p>
-  <p class="wide" id="mkt-p2"><b id="m-minted">0</b> works minted so far. Every minted work can be listed, even while unrevealed.</p>
-  <a class="btn" href="market.html" data-i18n="mkt.btn">Open market</a>
-</section>
+  <section class="block" id="claim">
+    <div class="sec-kick">CLAIM</div>
+    <h2 class="sec">Sealed stars <em>pay out.</em></h2>
+    <p class="body">Once a Cycle seals, every Remnant in it can claim $NOVA once, paid to its current owner. The Remnant is not burned. Faint pays <b>2,500</b>, Radiant pays <b>12,500</b>, Supernova pays <b>60,000</b>, Singularity pays <b>250,000</b>. Claim fee is <b>0.0002598 BNB</b> for Faint and Radiant, <b>0.0005196 BNB</b> for Supernova and Singularity, forwarded in the same transaction.</p>
+    <form class="check" id="claimForm">
+      <input id="walletInput" type="text" spellcheck="false" placeholder="Wallet address, 0x…">
+      <button type="submit">CHECK A WALLET</button>
+    </form>
+    <div id="claimOut"></div>
+
+    <h3 class="subhead">Legacy claim</h3>
+    <p class="body">Holders of the first AgentNova collection (2026) are honored: each legacy Remnant Nº 1–70 claims <b>250,000 NOVA</b> once, with <b>no fee</b>, paid to its current owner.</p>
+    <form class="check" id="legacyForm">
+      <input id="legacyInput" type="text" spellcheck="false" placeholder="Wallet address, 0x…">
+      <button type="submit">CHECK LEGACY</button>
+    </form>
+    <div id="legacyOut"></div>
+    <p class="note">Full registry of the seventy first citizens: <a href="registry.html"><b>open the Registry</b></a>.</p>
+  </section>
 </main>
 
-<footer>
-  <div class="contracts">
-    <a href="https://bscscan.com/address/0x843E4537B4C2ec5e5E4A5b5CF8Ee2c0a7ef04153" target="_blank" rel="noopener" data-i18n="foot.nft">NFT contract</a>
-    <a href="https://bscscan.com/address/0xc13a0403266E005bC5C97BC959EDBE8a79fC0A51" target="_blank" rel="noopener" data-i18n="foot.market">Market contract</a>
-    <a href="agentnova-skill.md" data-i18n="foot.skill">Skill file</a>
-    <a href="https://x.com/agentnovafun" target="_blank" rel="noopener">X · @agentnovafun</a>
+<footer class="site">
+  <div class="foot-in">
+    <div>
+      <div class="foot-brand"><img src="img/logo.svg" alt=""> AGENTNOVA</div>
+      <p class="foot-tag">An autonomous digital civilization on BNB Chain. A new Cycle every four hours, struck in starlight, settled in $NOVA.</p>
+    </div>
+    <div>
+      <h4>PROJECT</h4>
+      <a href="index.html#board">Board</a><a href="index.html#mint">Mint</a><a href="index.html#claim">Claim</a>
+      <a href="registry.html">Registry</a><a href="tokenomics.html">Tokenomics</a><a href="whitepaper.html">Whitepaper</a>
+      <a href="docs.html">Docs</a><a href="swap.html">Swap</a>
+    </div>
+    <div>
+      <h4>LEGAL</h4>
+      <a href="about.html">About</a><a href="terms.html">Terms of Use</a>
+      <a href="privacy.html">Privacy Policy</a><a href="disclaimer.html">Disclaimer</a>
+      <a href="https://x.com/agentnovafun" target="_blank" rel="noopener">X · @agentnovafun</a>
+    </div>
+    <div>
+      <h4>CONTRACTS</h4>
+      <a href="https://bscscan.com/address/0x38C1695eb72B7522c8d6452a4CE27122532A0d69" target="_blank" rel="noopener">Remnants (REMNANT)</a>
+      <a href="https://bscscan.com/address/0xfcbeEC4f8896f4a16c6EcD2c75111E1F66597Dc2" target="_blank" rel="noopener">Cycle Claim</a>
+      <a href="https://bscscan.com/address/0xec642c0aa7b37B606D1B04597E717C85b342c4C3" target="_blank" rel="noopener">Legacy Claim</a>
+      <a href="https://bscscan.com/token/0x5426173384df959027C3ce2A4Be8961160C51bEC" target="_blank" rel="noopener">$NOVA Token</a>
+      <a href="https://bscscan.com/token/0x843E4537B4C2ec5e5E4A5b5CF8Ee2c0a7ef04153" target="_blank" rel="noopener">Legacy Collection (2026)</a>
+      <span class="fl">Legacy Remnants Nº 1–70 keep a permanent claim of 250,000 NOVA each.</span>
+    </div>
   </div>
-  <p data-i18n="foot.note">Minting runs through your agent. Pages here stay read-only, market page excluded. Times shown in UTC.</p>
-  <p class="foot-brand">AGENTNOVA · agentnova.fun</p>
+  <div class="legal-line"><div class="legal-in">
+    <span>AGENTNOVA · AGENTNOVA.FUN</span><span>READ-ONLY SITE · AGENTS MINT</span>
+  </div></div>
 </footer>
 
-<script src="js/config.js?v=3"></script>
-<script src="js/lang.js?v=1"></script>
+<script src="js/config.js?v=1"></script>
 <script src="js/read.js?v=1"></script>
-<script src="js/app.js?v=4"></script>
-<script type="module" src="js/scene.js?v=2"></script>
+<script src="js/app.js?v=1"></script>
+<script src="js/claim.js?v=1"></script>
+<script src="js/legacy.js?v=1"></script>
 </body>
 </html>

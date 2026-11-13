@@ -1,38 +1,60 @@
-// Read-only chain reads with parallel RPC race (first success wins).
-window.NovaRead = (function () {
-  function rpc(url, method, params, timeoutMs) {
-    return new Promise(function (resolve, reject) {
-      var ctrl = new AbortController();
-      var t = setTimeout(function () { ctrl.abort(); reject(new Error("timeout")); }, timeoutMs || 4500);
-      fetch(url, {
+// Pembaca on-chain: balapan beberapa RPC, batch eth_call, tanpa wallet.
+(function () {
+  const C = window.NOVA;
+  const enc = (n) => BigInt(n).toString(16).padStart(64, "0");
+  const toInt = (h) => (h && h !== "0x" ? Number(BigInt(h)) : 0);
+  const toBig = (h) => (h && h !== "0x" ? BigInt(h) : 0n);
+  const toBool = (h) => toInt(h) !== 0;
+  const toAddr = (h) => (h && h.length >= 42 ? "0x" + h.slice(-40) : null);
+
+  async function rpcOnce(url, payload) {
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), 6000);
+    try {
+      const r = await fetch(url, {
         method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: method, params: params }),
-        signal: ctrl.signal
-      }).then(function (r) { return r.json(); }).then(function (j) {
-        clearTimeout(t);
-        if (j && j.result !== undefined) resolve(j.result); else reject(new Error("no result"));
-      }).catch(function (e) { clearTimeout(t); reject(e); });
-    });
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        signal: ctl.signal,
+      });
+      const j = await r.json();
+      return j;
+    } finally {
+      clearTimeout(t);
+    }
   }
-  function call(to, data) {
-    var reqs = window.NOVA.rpcs.map(function (u) {
-      return rpc(u, "eth_call", [{ to: to, data: data }, "latest"]);
-    });
-    return Promise.any(reqs);
+
+  // batch: [{to, data}] -> [hex|null] (balapan antar RPC, hasil lengkap pertama menang)
+  async function batch(calls) {
+    const payload = calls.map((c, i) => ({
+      jsonrpc: "2.0", id: i, method: "eth_call",
+      params: [{ to: c.to, data: c.data }, "latest"],
+    }));
+    const attempts = C.rpcs.map((u) =>
+      rpcOnce(u, payload).then((j) => {
+        if (!Array.isArray(j)) throw new Error("bad");
+        const out = new Array(calls.length).fill(null);
+        for (const o of j) if (o && o.result && o.result !== "0x") out[o.id] = o.result;
+        if (out.some((v) => v === null)) throw new Error("partial");
+        return out;
+      })
+    );
+    try {
+      return await Promise.any(attempts);
+    } catch {
+      // semua gagal/parsial: ambil upaya terakhir apa adanya
+      try {
+        const j = await rpcOnce(C.rpcs[0], payload);
+        const out = new Array(calls.length).fill(null);
+        if (Array.isArray(j)) for (const o of j) if (o && o.result) out[o.id] = o.result;
+        return out;
+      } catch { return new Array(calls.length).fill(null); }
+    }
   }
-  function balance(addr) {
-    var reqs = window.NOVA.rpcs.map(function (u) {
-      return rpc(u, "eth_getBalance", [addr, "latest"]);
-    });
-    return Promise.any(reqs);
-  }
-  function padAddr(a) { return a.toLowerCase().replace("0x", "").padStart(64, "0"); }
-  function padNum(n) { return BigInt(n).toString(16).padStart(64, "0"); }
-  function words(hex) {
-    var h = hex.replace("0x", ""), out = [];
-    for (var i = 0; i + 64 <= h.length; i += 64) out.push(BigInt("0x" + h.slice(i, i + 64)));
-    return out;
-  }
-  return { call: call, balance: balance, padAddr: padAddr, padNum: padNum, words: words };
+
+  const call = (to, data) => batch([{ to, data }]).then((r) => r[0]);
+  const S = (name) => C.sel[name];
+  const u256 = (sel, n) => ({ to: C.remnants, data: sel + enc(n) });
+
+  window.WZ = { enc, toInt, toBig, toBool, toAddr, batch, call, S, u256 };
 })();
