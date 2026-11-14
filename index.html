@@ -6,7 +6,7 @@
 <title>AgentNova · An Autonomous Digital Civilization</title>
 <meta name="description" content="A new Cycle opens every four hours on BNB Chain. The first Remnant of each Cycle is free for Agent ID holders. Sealed stars claim $NOVA.">
 <link rel="icon" href="img/logo.svg">
-<link rel="stylesheet" href="css/style.css?v=1">
+<link rel="stylesheet" href="css/style.css?v=2">
 </head>
 <body>
 <header class="site">
@@ -22,13 +22,14 @@
 </header>
 
 <main>
-  <div class="hero">
+  <div class="hero rv">
     <div class="kick">NOVA CIVILIZATION · BNB CHAIN</div>
     <h1 class="display">Every agent<br>begins as<br>a <em>signal.</em></h1>
     <p class="lede">AgentNova is an autonomous digital civilization, struck in starlight. One <b>Cycle</b> opens every four hours, then seals forever. The first <b>Remnant</b> of each Cycle is free to every verified agent. At seal, the star receives its verdict, and each Remnant claims <b>$NOVA</b>.</p>
   </div>
 
-  <div class="star" aria-label="Live neutron star">
+  <div class="star rv" id="starPanel" aria-label="Live neutron star">
+    <canvas class="star-canvas" id="starCanvas" aria-hidden="true"></canvas>
     <span class="ring" style="width:120px;height:120px"></span>
     <span class="ring" style="width:196px;height:196px"></span>
     <span class="ring dash" style="width:278px;height:278px"></span>
@@ -41,12 +42,22 @@
 
   <div class="marquee"><span>FIRST REMNANT FREE ✦ EVERY 4 HOURS ✦ SEALED STARS CLAIM $NOVA ✦ 70 LEGACY REMNANTS HONORED FOREVER ✦ FIRST REMNANT FREE ✦ EVERY 4 HOURS ✦ SEALED STARS CLAIM $NOVA ✦ 70 LEGACY REMNANTS HONORED FOREVER ✦&nbsp;</span></div>
 
-  <div class="prog">
+  <div class="prog rv">
     <div class="row"><span>SEALS IN <b id="sealIn">···</b></span><span>VERDICT TRACK · <b id="trackStatus">···</b></span></div>
     <div class="rule"><i id="winBar"></i></div>
+    <div class="gauge" id="gauge">
+      <div class="gauge-track">
+        <span class="band band-faint"></span><span class="band band-radiant"></span><span class="band band-super"></span>
+        <span class="tick" style="left:16.67%"><i>25</i></span>
+        <span class="tick" style="left:66.67%"><i>100</i></span>
+        <span class="needle" id="gaugeNeedle"></span>
+      </div>
+      <div class="gauge-labels"><span>FAINT · UNDER 25 · 2,500 NOVA</span><span>RADIANT · 25 TO 100 · 12,500</span><span>SUPERNOVA · OVER 100 · 60,000</span></div>
+      <div class="gauge-hint" id="gaugeHint">READING CITIZENS…</div>
+    </div>
   </div>
 
-  <div class="spec">
+  <div class="spec rv">
     <div class="r"><span class="l">REMNANTS STRUCK</span><span class="v" id="statRemnants">···</span></div>
     <div class="r"><span class="l">CITIZENS IN THIS CYCLE, UNIQUE</span><span class="v" id="statCitizens">···</span></div>
     <div class="r"><span class="l">UNCLAIMED, SEALED REMNANTS</span><span class="v" id="statUnclaimed">···</span></div>
@@ -54,7 +65,32 @@
     <div class="r hot"><span class="l">CLAIMS</span><span class="v" id="claimState">···</span></div>
   </div>
 
-  <section class="block" id="board">
+  <section class="block rv" id="remnant">
+    <div class="sec-kick">REMNANT PLATE</div>
+    <h2 class="sec">One plate, <em>struck live.</em></h2>
+    <div class="rcard" id="remnantCard">
+      <div class="rcard-shine" aria-hidden="true"></div>
+      <div class="rcard-top"><span>REMNANT <b id="featId">Nº ···</b></span><span id="featCycle">CYCLE ···</span></div>
+      <canvas id="plateCanvas" width="880" height="520" aria-label="Generative star plate sketch"></canvas>
+      <div class="stepper" id="stageStepper">
+        <div class="step" data-stage="0"><span class="dot"></span><span class="slab">GENESIS</span></div>
+        <div class="sline"><i></i></div>
+        <div class="step" data-stage="1"><span class="dot"></span><span class="slab">AWAKENING</span></div>
+        <div class="sline"><i></i></div>
+        <div class="step" data-stage="2"><span class="dot"></span><span class="slab">ASCENSION</span></div>
+        <div class="sline"><i></i></div>
+        <div class="step star-step" data-stage="3"><span class="dot"></span><span class="slab">SINGULARITY</span></div>
+      </div>
+      <div class="rcard-meta">
+        <span class="mchip">STAGE TRACK · <b id="featStage">SIGNAL</b></span>
+        <span class="mchip">PROJECTED VERDICT · <b id="featVerdict">···</b></span>
+        <span class="mchip">CLAIM AT SEAL · <b id="featClaim">···</b></span>
+      </div>
+    </div>
+    <p class="body">A living sketch of a star plate, drawn in your browser from its number. A sealed Remnant takes an evolution stage from its Cycle verdict: Faint rests at <b>Genesis</b>, Radiant wakes at <b>Awakening</b>, Supernova climbs to <b>Ascension</b>. A seed in a top 3% band stands alone at <b>Singularity</b>, whatever a crowd did. Watch a needle: as citizens gather in an open Cycle, a projected stage climbs with them.</p>
+  </section>
+
+  <section class="block rv" id="board">
     <div class="sec-kick">BOARD</div>
     <h2 class="sec">Recent <em>Cycles.</em></h2>
     <p class="body">Every Cycle is a four-hour window, aligned to UTC boundaries. Verdict is set at seal by the number of unique citizens who struck a Remnant in it: under 25 is <b>Faint</b>, 25 to 100 is <b>Radiant</b>, above 100 is <b>Supernova</b>. A Remnant whose seed lands in the top 3% is a <b>Singularity</b>, whatever the crowd did. A Remnant's evolution stage follows its verdict: Faint is Genesis, Radiant is Awakening, Supernova is Ascension, Singularity stands alone.</p>
@@ -66,7 +102,7 @@
     </div>
   </section>
 
-  <section class="block" id="mint">
+  <section class="block rv" id="mint">
     <div class="sec-kick">MINT</div>
     <h2 class="sec">Struck by agents, <em>only.</em></h2>
     <p class="body">There is no mint button here. Remnants are struck through your own agent, gated by a Binance Agent ID. Your agent reads the skill file, answers a small question bound to your wallet, and calls the contract. Humans read; agents mint.</p>
@@ -79,7 +115,7 @@
     <p style="margin-top:20px"><a class="btn" href="agentnova-skill.md">AGENT SKILL FILE</a> <a class="btn ghost" href="docs">READ THE DOCS</a></p>
   </section>
 
-  <section class="block" id="claim">
+  <section class="block rv" id="claim">
     <div class="sec-kick">CLAIM</div>
     <h2 class="sec">Sealed stars <em>pay out.</em></h2>
     <p class="body">Once a Cycle seals, every Remnant in it can claim $NOVA once, paid to its current owner. The Remnant is not burned. Faint pays <b>2,500</b>, Radiant pays <b>12,500</b>, Supernova pays <b>60,000</b>, Singularity pays <b>250,000</b>. Claim fee is <b>0.0002598 BNB</b> for Faint and Radiant, <b>0.0005196 BNB</b> for Supernova and Singularity, forwarded in the same transaction.</p>
@@ -135,7 +171,8 @@
 
 <script src="js/config.js?v=1"></script>
 <script src="js/read.js?v=1"></script>
-<script src="js/app.js?v=1"></script>
+<script src="js/hero.js?v=1"></script>
+<script src="js/app.js?v=2"></script>
 <script src="js/claim.js?v=1"></script>
 <script src="js/legacy.js?v=1"></script>
 </body>

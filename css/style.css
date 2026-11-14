@@ -121,3 +121,65 @@ footer.site a:hover { color: #fff; }
 footer.site .fl { display: block; font-size: 12.5px; color: #a9ba87; padding-top: 6px; line-height: 1.55; }
 .legal-line { border-top: 1px solid #33431c; }
 .legal-in { max-width: 1080px; margin: 0 auto; padding: 14px 18px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-family: "Space Mono"; font-size: 9.5px; letter-spacing: 0.2em; color: #7e9160; }
+
+/* --- Lapisan interaktif beranda: kanvas observatorium, jarum verdict, kartu Remnant, reveal --- */
+html { scroll-padding-top: 78px; }
+.star canvas.star-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; display: block; }
+.star.canvas-on .ring, .star.canvas-on .orbit, .star.canvas-on .sat { display: none; }
+.star .core, .star .tag, .star .cap { z-index: 2; }
+
+.gauge { margin-top: 16px; }
+.gauge-track { position: relative; height: 16px; border: 2px solid var(--line); border-radius: 99px; overflow: visible; display: flex; background: #eef4da; }
+.gauge-track .band { height: 100%; }
+.band-faint { width: 16.67%; background: #eef4da; border-radius: 99px 0 0 99px; }
+.band-radiant { width: 50%; background: var(--lime-soft); }
+.band-super { flex: 1; background: var(--lime); border-radius: 0 99px 99px 0; }
+.gauge-track .tick { position: absolute; top: -3px; width: 2px; height: 22px; background: var(--line); }
+.gauge-track .tick i { position: absolute; top: 24px; left: 50%; transform: translateX(-50%); font-style: normal; font-family: "Space Mono"; font-size: 9px; font-weight: 700; color: var(--ink-3); }
+.gauge-track .needle { position: absolute; top: -7px; left: 0%; width: 3px; height: 30px; background: var(--ink); border-radius: 2px; transform: translateX(-50%); transition: left 0.9s cubic-bezier(0.22, 1, 0.36, 1); z-index: 2; }
+.gauge-track .needle::before { content: ""; position: absolute; top: -9px; left: 50%; transform: translateX(-50%); width: 13px; height: 13px; border-radius: 50%; background: var(--lime-hi); border: 2.4px solid var(--line); box-shadow: 0 0 0 4px rgba(155, 232, 21, 0.35); animation: needleGlow 2.2s ease-in-out infinite; }
+@keyframes needleGlow { 0%, 100% { box-shadow: 0 0 0 3px rgba(155, 232, 21, 0.3); } 50% { box-shadow: 0 0 0 7px rgba(155, 232, 21, 0.12); } }
+.gauge-labels { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-top: 26px; font-family: "Space Mono"; font-size: 8.8px; letter-spacing: 0.14em; color: var(--ink-3); }
+.gauge-hint { margin-top: 9px; font-family: "Space Mono"; font-weight: 700; font-size: 11px; letter-spacing: 0.12em; color: var(--ink); overflow-wrap: anywhere; }
+
+.rv { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+.rv.in { opacity: 1; transform: none; }
+.spec.rv .r { min-width: 0; }
+
+.rcard { position: relative; margin-top: 20px; background: var(--card); border: 2.4px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 18px; overflow: hidden; will-change: transform; }
+.rcard-shine { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(198, 255, 77, 0.28), transparent 65%); z-index: 1; }
+.rcard:hover .rcard-shine { opacity: 1; }
+.rcard-top { position: relative; z-index: 2; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-family: "Space Mono"; font-size: 10.5px; letter-spacing: 0.18em; color: var(--ink-3); }
+.rcard-top b { color: var(--ink); }
+#plateCanvas { position: relative; z-index: 2; display: block; width: 100%; height: auto; margin-top: 14px; border: 2px solid var(--line); border-radius: 14px; }
+.stepper { position: relative; z-index: 2; display: flex; align-items: flex-start; margin-top: 20px; }
+.step { display: flex; flex-direction: column; align-items: center; gap: 7px; flex: 0 0 auto; text-align: center; }
+.step .dot { width: 17px; height: 17px; border-radius: 50%; border: 2.4px solid var(--line); background: var(--card); transition: background 0.4s ease, box-shadow 0.4s ease; }
+.step .slab { font-family: "Space Mono"; font-size: 8.6px; font-weight: 700; letter-spacing: 0.12em; color: var(--ink-3); }
+.step.done .dot { background: var(--lime-deep); }
+.step.active .dot { background: var(--lime); box-shadow: 0 0 0 5px rgba(155, 232, 21, 0.3); animation: needleGlow 2.2s ease-in-out infinite; }
+.step.active .slab { color: var(--ink); }
+.step.star-step .dot { border-radius: 5px; transform: rotate(45deg); }
+.sline { flex: 1 1 12px; height: 3px; background: var(--dash); margin: 7px 6px 0; border-radius: 2px; overflow: hidden; min-width: 10px; }
+.sline i { display: block; height: 100%; width: 0%; background: var(--lime-deep); transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+.sline.filled i { width: 100%; }
+.rcard-meta { position: relative; z-index: 2; display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
+.mchip { font-family: "Space Mono"; font-size: 9.8px; letter-spacing: 0.1em; color: var(--ink-2); background: var(--paper); border: 1.8px solid var(--line); border-radius: 99px; padding: 7px 11px; overflow-wrap: anywhere; }
+.mchip b { color: var(--ink); }
+
+.btn { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--line); }
+.btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--line); }
+form.check button { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+form.check button:hover { transform: translateY(-1px); box-shadow: 3px 3px 0 rgba(22, 33, 12, 0.35); }
+form.check button:active { transform: translateY(1px); box-shadow: none; }
+nav.main a { transition: color 0.15s ease; }
+table.board tbody tr { transition: background 0.2s ease; }
+table.board tbody tr:hover { background: #fbfdf2; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rv { opacity: 1; transform: none; transition: none; }
+  .marquee span, .star .ring, .gauge-track .needle::before, .step.active .dot { animation: none; }
+  .gauge-track .needle, .sline i { transition: none; }
+  html { scroll-behavior: auto; }
+}

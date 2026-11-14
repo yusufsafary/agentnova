@@ -4,6 +4,12 @@
   const $ = (id) => document.getElementById(id);
   const fmt = (n) => Number(n).toLocaleString("en-US");
   const fmtW = (wei) => fmt(Math.floor(Number(BigInt(wei) / 1000000000000n) / 1e6)) ;
+  const setNum = (id, n) => {
+    const el = $(id);
+    if (!el) return;
+    if (window.NovaFX && window.NovaFX.countUp) window.NovaFX.countUp(el, n);
+    else el.textContent = fmt(n);
+  };
   let endTs = 0, trackTimer = null;
 
   function tick() {
@@ -45,7 +51,7 @@
     const pool = head[4];
     const claimOpen = Z.toBool(head[5]);
 
-    if ($("statRemnants")) $("statRemnants").textContent = fmt(total);
+    setNum("statRemnants", total);
     if ($("statPool")) $("statPool").textContent = fmt(Number(Z.toBig(pool) / 10n ** 18n)) + " NOVA";
     if ($("claimState")) $("claimState").textContent = claimOpen ? "OPEN" : "OPENS WITH FIRST SEAL";
     if ($("latestLine") && total > 0) $("latestLine").textContent = `+ remnant Nº ${fmt(total)} struck, just now`;
@@ -53,8 +59,9 @@
     if (!open || cur === 0) {
       if ($("cycleNo")) $("cycleNo").textContent = "Nº 1 · OPENS SOON";
       if ($("boardBody")) $("boardBody").innerHTML = `<tr><td colspan="5" class="empty">Cycle Nº 1 has not opened yet. The board fills from the first seal.</td></tr>`;
-      if ($("statCitizens")) $("statCitizens").textContent = "0";
-      if ($("statUnclaimed")) $("statUnclaimed").textContent = "0";
+      setNum("statCitizens", 0);
+      setNum("statUnclaimed", 0);
+      if (window.NovaFX) window.NovaFX.setCitizens(0);
       return;
     }
 
@@ -71,10 +78,14 @@
     endTs = Z.toInt(r[0]);
     const inCur = Z.toInt(r[1]);
     const coders = Z.toInt(r[2]);
-    if ($("statCitizens")) $("statCitizens").textContent = fmt(coders);
-    if ($("statUnclaimed")) $("statUnclaimed").textContent = fmt(Math.max(0, total - inCur - claimed));
+    setNum("statCitizens", coders);
+    setNum("statUnclaimed", Math.max(0, total - inCur - claimed));
     if ($("trackStatus")) {
       $("trackStatus").textContent = coders < 25 ? "FAINT" : coders <= 100 ? "RADIANT" : "SUPERNOVA";
+    }
+    if (window.NovaFX) {
+      window.NovaFX.setCitizens(coders);
+      window.NovaFX.setFeatured(total, cur);
     }
     if (trackTimer) clearInterval(trackTimer);
     tick(); trackTimer = setInterval(tick, 1000);
